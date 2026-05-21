@@ -54,7 +54,7 @@ const telegram = {
       format: 'uri',
       default: 'http://192.168.2.140:38080',
       description: 'Адрес бэкенда kap-telegram. Self-hosters указывают свой инстанс.',
-      required: true
+      required: false
     }
   }
 };
