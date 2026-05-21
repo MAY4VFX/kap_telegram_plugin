@@ -52,7 +52,7 @@ const telegram = {
       title: 'Backend URL',
       type: 'string',
       format: 'uri',
-      default: 'https://kap-tg-server-adhyub-0c4097-92-100-214-68.traefik.me',
+      default: 'http://192.168.2.140:38080',
       description: 'Адрес бэкенда kap-telegram. Self-hosters указывают свой инстанс.',
       required: true
     }
