@@ -1,0 +1,26 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          String   @id @default(uuid())
+  telegramId  BigInt   @unique
+  uploadToken String   @unique
+  createdAt   DateTime @default(now())
+
+  sessions AuthSession[]
+}
+
+model AuthSession {
+  state     String   @id
+  status    String   @default("pending") // pending | approved | rejected
+  userId    String?
+  createdAt DateTime @default(now())
+
+  user User? @relation(fields: [userId], references: [id])
+}

@@ -1,0 +1,26 @@
+{
+  "name": "kap-telegram",
+  "version": "1.0.0",
+  "description": "Share your Kap recordings directly to Telegram",
+  "license": "MIT",
+  "main": "index.js",
+  "scripts": {
+    "test": "ava"
+  },
+  "files": [
+    "index.js",
+    "lib"
+  ],
+  "keywords": [
+    "kap-plugin"
+  ],
+  "dependencies": {
+    "form-data": "^4.0.0",
+    "open": "^8.4.2"
+  },
+  "devDependencies": {
+    "ava": "^5.3.1",
+    "kap-plugin-mock-context": "^0.2.0",
+    "kap-plugin-test": "^0.5.0"
+  }
+}

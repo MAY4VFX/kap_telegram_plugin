@@ -1,0 +1,15 @@
+{
+  "name": "kap-telegram-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Kap → Telegram: open-source plugin + multi-user bot",
+  "license": "MIT",
+  "workspaces": [
+    "packages/plugin",
+    "packages/server"
+  ],
+  "scripts": {
+    "build:server": "npm run build --workspace=packages/server",
+    "test:plugin": "npm test --workspace=packages/plugin"
+  }
+}

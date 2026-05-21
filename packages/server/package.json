@@ -1,0 +1,28 @@
+{
+  "name": "kap-telegram-server",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Kap → Telegram backend: grammY bot + Fastify HTTP API",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "prisma generate && tsc -p tsconfig.json",
+    "start": "node dist/index.js",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate deploy"
+  },
+  "dependencies": {
+    "@fastify/multipart": "^8.3.0",
+    "@prisma/client": "^5.22.0",
+    "fastify": "^4.28.1",
+    "grammy": "^1.30.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "prisma": "^5.22.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.6.3",
+    "@types/node": "^20.16.0"
+  }
+}

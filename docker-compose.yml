@@ -1,0 +1,57 @@
+# Self-host вне Dokploy. В Dokploy сервисы разносятся на отдельные applications.
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: kap
+      POSTGRES_PASSWORD: kap
+      POSTGRES_DB: kap
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U kap']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  telegram-bot-api:
+    image: aiogram/telegram-bot-api:latest
+    restart: unless-stopped
+    environment:
+      TELEGRAM_API_ID: ${TELEGRAM_API_ID}
+      TELEGRAM_API_HASH: ${TELEGRAM_API_HASH}
+      TELEGRAM_LOCAL: "true"
+      # Прокси нужен ТОЛЬКО этому сервису для доступа к Telegram.
+      PROXY_HOST: ${PROXY_HOST}
+      PROXY_PORT: ${PROXY_PORT}
+    volumes:
+      - botapi-data:/var/lib/telegram-bot-api
+    expose:
+      - "8081"
+
+  server:
+    build:
+      context: .
+      dockerfile: packages/server/Dockerfile
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      telegram-bot-api:
+        condition: service_started
+    environment:
+      BOT_TOKEN: ${BOT_TOKEN}
+      BOT_USERNAME: ${BOT_USERNAME}
+      BOT_API_ROOT: http://telegram-bot-api:8081
+      DATABASE_URL: postgresql://kap:kap@postgres:5432/kap?schema=public
+      PUBLIC_BACKEND_URL: ${PUBLIC_BACKEND_URL}
+      PORT: "3000"
+      HOST: 0.0.0.0
+      AUTO_APPROVE: ${AUTO_APPROVE:-true}
+    ports:
+      - "3000:3000"
+
+volumes:
+  pgdata:
+  botapi-data:
