@@ -20,12 +20,15 @@ const ensureToken = async (context, backendUrl) => {
   }
 
   // 1. Создаём сессию авторизации.
+  // ВНИМАНИЕ: Kap/NewKap бандлят got@9 → JSON включается опцией `json: true`
+  // (а не `responseType`), query-параметры передаются полем `query`.
   const startResponse = await context.request(`${backendUrl}/auth/start`, {
     method: 'POST',
-    responseType: 'json'
+    json: true
   });
 
-  const {state, botUrl} = startResponse.body || {};
+  const body = typeof startResponse.body === 'string' ? JSON.parse(startResponse.body) : startResponse.body;
+  const {state, botUrl} = body || {};
   if (!state || !botUrl) {
     throw new Error('Бэкенд вернул некорректный ответ /auth/start');
   }
@@ -42,11 +45,12 @@ const ensureToken = async (context, backendUrl) => {
 
     const statusResponse = await context.request(`${backendUrl}/auth/status`, {
       method: 'GET',
-      searchParams: {state},
-      responseType: 'json'
+      query: {state},
+      json: true
     });
 
-    const {status, uploadToken} = statusResponse.body || {};
+    const statusBody = typeof statusResponse.body === 'string' ? JSON.parse(statusResponse.body) : statusResponse.body;
+    const {status, uploadToken} = statusBody || {};
 
     if (status === 'approved' && uploadToken) {
       context.config.set('uploadToken', uploadToken);

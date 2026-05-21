@@ -45,7 +45,9 @@ const action = async context => {
 
 const telegram = {
   title: 'Share to Telegram',
-  formats: ['mp4', 'webm', 'gif'],
+  // Все форматы экспорта NewKap/Kap, чтобы пункт не пропадал ни на одном кодеке
+  // (hevc/av1 имеют расширение .mp4; бэкенд сам выберет способ отправки).
+  formats: ['mp4', 'hevc', 'av1', 'gif', 'apng', 'webm'],
   action,
   config: {
     backendUrl: {

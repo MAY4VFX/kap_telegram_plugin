@@ -7,7 +7,7 @@ test('share service exposes Telegram entry', t => {
   t.is(shareServices.length, 1);
   const [service] = shareServices;
   t.is(service.title, 'Share to Telegram');
-  t.deepEqual(service.formats, ['mp4', 'webm', 'gif']);
+  t.deepEqual(service.formats, ['mp4', 'hevc', 'av1', 'gif', 'apng', 'webm']);
   t.is(typeof service.action, 'function');
   t.truthy(service.config.backendUrl);
 });

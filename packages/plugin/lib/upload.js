@@ -30,13 +30,13 @@ const uploadFile = async (context, {backendUrl, uploadToken, filePath}) => {
       },
       body: form,
       // Большие файлы (до 2 ГБ) грузятся долго — не обрываем по таймауту
-      // и не повторяем загрузку автоматически.
-      timeout: {request: 3600000}, // 1 час
-      retry: {limit: 0}
+      // и не повторяем загрузку автоматически. got@9: timeout — число, retry — число.
+      timeout: 3600000, // 1 час
+      retry: 0
     });
   } catch (error) {
-    // got кладёт код ответа в error.response.statusCode
-    const statusCode = error && error.response && error.response.statusCode;
+    // got@9 кладёт код ответа в error.statusCode (и error.response.statusCode)
+    const statusCode = (error && error.statusCode) || (error && error.response && error.response.statusCode);
     if (statusCode) {
       const wrapped = new Error(`Бэкенд вернул ${statusCode}`);
       wrapped.statusCode = statusCode;

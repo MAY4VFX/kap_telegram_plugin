@@ -1,3 +1,4 @@
+import {extname} from 'node:path';
 import {Bot, InputFile} from 'grammy';
 import {config} from './config.js';
 
@@ -14,12 +15,33 @@ export const bot = new Bot(config.BOT_TOKEN, {
   }
 });
 
+// Видео-контейнеры, которые Telegram умеет показывать как видео.
+const VIDEO_EXTS = new Set(['mp4', 'mov', 'm4v', 'webm']);
+
 /**
- * Отправляет видео напрямую в личку пользователю.
+ * Отправляет медиа напрямую в личку пользователю, выбирая способ по формату:
+ *  - gif            → sendAnimation
+ *  - mp4/mov/webm…  → sendVideo
+ *  - всё остальное  → sendDocument
+ * Если «красивый» способ не сработал (Telegram отверг формат) — гарантированно
+ * досылаем файл документом, чтобы пользователь его всё равно получил.
+ *
+ * Формат экспорта hevc/av1 в Kap сохраняется в .mp4, поэтому ориентируемся на расширение.
  */
-export async function sendVideo(telegramId: bigint, filePath: string, caption?: string): Promise<void> {
-  await bot.api.sendVideo(Number(telegramId), new InputFile(filePath), {
-    caption,
-    supports_streaming: true
-  });
+export async function sendMedia(telegramId: bigint, filePath: string, caption?: string): Promise<void> {
+  const id = Number(telegramId);
+  const ext = extname(filePath).toLowerCase().replace(/^\./, '');
+
+  try {
+    if (ext === 'gif') {
+      await bot.api.sendAnimation(id, new InputFile(filePath), {caption});
+    } else if (VIDEO_EXTS.has(ext)) {
+      await bot.api.sendVideo(id, new InputFile(filePath), {caption, supports_streaming: true});
+    } else {
+      await bot.api.sendDocument(id, new InputFile(filePath), {caption});
+    }
+  } catch (error) {
+    // Фолбэк: досылаем документом (новый InputFile — поток уже мог быть использован).
+    await bot.api.sendDocument(id, new InputFile(filePath), {caption});
+  }
 }

@@ -6,7 +6,7 @@ import {join} from 'node:path';
 import {randomUUID} from 'node:crypto';
 import type {FastifyInstance} from 'fastify';
 import {prisma} from '../db.js';
-import {sendVideo} from '../telegram.js';
+import {sendMedia} from '../telegram.js';
 
 function extractToken(authorization?: string): string | undefined {
   if (!authorization) {
@@ -50,7 +50,7 @@ export async function uploadRoutes(app: FastifyInstance): Promise<void> {
         return reply.code(413).send({error: 'файл превышает лимит'});
       }
 
-      await sendVideo(user.telegramId, tmpPath, defaultFileName);
+      await sendMedia(user.telegramId, tmpPath, defaultFileName);
       return {ok: true};
     } catch (error) {
       request.log.error(error, 'не удалось отправить видео');
