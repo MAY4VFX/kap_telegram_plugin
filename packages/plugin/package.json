@@ -3,6 +3,16 @@
   "version": "1.0.1",
   "description": "Share your Kap recordings directly to Telegram",
   "license": "MIT",
+  "author": "MAY4VFX",
+  "homepage": "https://github.com/MAY4VFX/kap_telegram_plugin#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MAY4VFX/kap_telegram_plugin.git",
+    "directory": "packages/plugin"
+  },
+  "bugs": {
+    "url": "https://github.com/MAY4VFX/kap_telegram_plugin/issues"
+  },
   "main": "index.js",
   "scripts": {
     "test": "ava"
