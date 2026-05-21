@@ -28,7 +28,11 @@ const uploadFile = async (context, {backendUrl, uploadToken, filePath}) => {
         Authorization: `Bearer ${uploadToken}`,
         ...form.getHeaders()
       },
-      body: form
+      body: form,
+      // Большие файлы (до 2 ГБ) грузятся долго — не обрываем по таймауту
+      // и не повторяем загрузку автоматически.
+      timeout: {request: 3600000}, // 1 час
+      retry: {limit: 0}
     });
   } catch (error) {
     // got кладёт код ответа в error.response.statusCode

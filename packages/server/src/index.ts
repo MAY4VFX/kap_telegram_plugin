@@ -9,7 +9,11 @@ import {disconnect} from './db.js';
 async function main(): Promise<void> {
   const app = Fastify({
     logger: true,
-    bodyLimit: 2 * 1024 * 1024 * 1024 // 2 ГБ
+    bodyLimit: 2 * 1024 * 1024 * 1024, // 2 ГБ
+    // Не обрываем длинные загрузки/отправки больших файлов по таймауту.
+    requestTimeout: 0, // без лимита на длительность запроса
+    connectionTimeout: 0, // без лимита на установку соединения
+    keepAliveTimeout: 3600 * 1000 // 1 час
   });
 
   await app.register(multipart, {

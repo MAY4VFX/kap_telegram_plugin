@@ -52,7 +52,7 @@ const telegram = {
       title: 'Backend URL',
       type: 'string',
       format: 'uri',
-      default: 'http://192.168.2.140:38080',
+      default: 'https://kap.ai-vfx.com',
       description: 'Адрес бэкенда kap-telegram. Self-hosters указывают свой инстанс.',
       required: false
     }

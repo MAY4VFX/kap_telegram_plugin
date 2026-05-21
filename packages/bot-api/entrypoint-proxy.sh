@@ -17,8 +17,9 @@ cat > "$CONF" <<EOF
 strict_chain
 proxy_dns
 remote_dns_subnet 224
-tcp_read_time_out 15000
-tcp_connect_time_out 8000
+# Запас под долгую заливку больших файлов (до 2 ГБ) в Telegram через прокси.
+tcp_read_time_out 300000
+tcp_connect_time_out 30000
 [ProxyList]
 $PROXY_TYPE $PROXY_HOST $PROXY_PORT
 EOF
