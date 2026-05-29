@@ -7,6 +7,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends openssl && rm -
 
 COPY packages/server/package.json ./packages/server/package.json
 COPY package.json ./package.json
+# @ffprobe-installer/ffprobe тянет бинарь ffprobe только под платформу сборки
+# (linux-x64, ffprobe 5.2.0) через optionalDependencies — лишнего не качается.
 RUN npm install --prefix packages/server
 
 COPY packages/server ./packages/server
